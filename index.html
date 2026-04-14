@@ -1,577 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LifeHub — The Fellowship's Last Hope</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #000;
-    color: #39ff14;
-    font-family: 'Courier New', Courier, monospace;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  #game-container {
-    max-width: 760px;
-    width: 100%;
-  }
-  h1 {
-    text-align: center;
-    font-size: clamp(1.4rem, 4vw, 2.2rem);
-    color: #ffd700;
-    text-shadow: 0 0 18px #ffd700, 0 0 36px #ff8c00;
-    letter-spacing: 3px;
-    margin-bottom: 6px;
-    padding-top: 10px;
-  }
-  .subtitle {
-    text-align: center;
-    color: #888;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    margin-bottom: 24px;
-  }
-  #stats-bar {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    background: #0a0a0a;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 10px 16px;
-    margin-bottom: 18px;
-    font-size: 0.85rem;
-  }
-  .stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .stat-label { color: #888; }
-  .stat-hp { color: #ff4444; }
-  .stat-will { color: #7b68ee; }
-  .stat-hope { color: #ffd700; }
-  .stat-ring { color: #ff8c00; }
-  #story-box {
-    background: #050505;
-    border: 1px solid #1a3a1a;
-    border-radius: 4px;
-    padding: 20px 24px;
-    min-height: 180px;
-    margin-bottom: 18px;
-    font-size: clamp(0.85rem, 2.2vw, 0.97rem);
-    line-height: 1.75;
-    color: #c8ffc8;
-    white-space: pre-wrap;
-  }
-  #story-box .em { color: #ffd700; font-style: italic; }
-  #choices {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .choice-btn {
-    background: #000;
-    color: #39ff14;
-    border: 1px solid #39ff14;
-    border-radius: 3px;
-    padding: 12px 18px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: clamp(0.82rem, 2vw, 0.93rem);
-    cursor: pointer;
-    text-align: left;
-    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-  }
-  .choice-btn:hover {
-    background: #39ff14;
-    color: #000;
-    box-shadow: 0 0 12px #39ff14;
-  }
-  .choice-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  #play-again {
-    display: none;
-    margin-top: 18px;
-    background: #000;
-    color: #ffd700;
-    border: 1px solid #ffd700;
-    border-radius: 3px;
-    padding: 12px 28px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-    width: 100%;
-  }
-  #play-again:hover {
-    background: #ffd700;
-    color: #000;
-    box-shadow: 0 0 16px #ffd700;
-  }
-  #chapter-label {
-    color: #555;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-  }
-  .ring-warning { color: #ff4500 !important; text-shadow: 0 0 8px #ff4500; }
-  .ending-text { color: #ffd700; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fellowship Quest - A Lord of the Rings RPG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a1a0a 0%, #0d2a0d 100%);
+            color: #7fb342;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(10, 20, 10, 0.95);
+            border: 3px solid #7fb342;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(127, 179, 66, 0.4), inset 0 0 20px rgba(127, 179, 66, 0.1);
+            padding: 30px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #c8a882;
+            text-shadow: 0 0 10px #7fb342, 0 0 20px #7fb342;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #7fb342, 0 0 20px #7fb342; }
+            50% { text-shadow: 0 0 20px #7fb342, 0 0 30px #7fb342, 0 0 40px #7fb342; }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a89968;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(127, 179, 66, 0.05);
+            border: 1px solid #7fb342;
+            border-radius: 4px;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+        }
+
+        .stat-name {
+            font-weight: bold;
+            color: #c8a882;
+        }
+
+        .stat-bar {
+            width: 120px;
+            height: 12px;
+            background: rgba(10, 20, 10, 0.8);
+            border: 1px solid #7fb342;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+
+        .stat-fill {
+            height: 100%;
+            background: #7fb342;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 8px #7fb342;
+        }
+
+        .stat-value {
+            color: #a89968;
+            font-size: 0.85em;
+            margin-left: 10px;
+            min-width: 40px;
+        }
+
+        .story-text {
+            flex: 1;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(13, 42, 13, 0.7);
+            border-left: 3px solid #7fb342;
+            line-height: 1.8;
+            font-size: 1em;
+            color: #7fb342;
+            min-height: 200px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .choice-btn {
+            padding: 12px 20px;
+            background: rgba(127, 179, 66, 0.1);
+            border: 2px solid #7fb342;
+            color: #7fb342;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-align: left;
+            display: none;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            background: rgba(127, 179, 66, 0.3);
+            box-shadow: 0 0 15px rgba(127, 179, 66, 0.6);
+            transform: translateX(5px);
+        }
+
+        .choice-btn:active:not(:disabled) {
+            transform: translateX(3px);
+        }
+
+        .choice-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .choice-btn.visible {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .play-again-btn {
+            padding: 15px 30px;
+            background: #7fb342;
+            border: 2px solid #7fb342;
+            color: #0a1a0a;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: none;
+            align-self: center;
+            box-shadow: 0 0 15px rgba(127, 179, 66, 0.5);
+        }
+
+        .play-again-btn:hover {
+            background: #a89968;
+            box-shadow: 0 0 25px rgba(127, 179, 66, 0.8);
+        }
+
+        .play-again-btn.visible {
+            display: block;
+        }
+
+        .ending-text {
+            text-align: center;
+            font-size: 1.3em;
+            color: #c8a882;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 1.8em;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-bar {
+                width: 80px;
+            }
+
+            .story-text {
+                font-size: 0.95em;
+                min-height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="game-container">
-  <h1>⚔ THE FELLOWSHIP'S LAST HOPE ⚔</h1>
-  <div class="subtitle">— A Lord of the Rings Text Adventure —</div>
-  <div id="stats-bar">
-    <div class="stat"><span class="stat-label">HP:</span><span class="stat-hp" id="s-hp">100</span></div>
-    <div class="stat"><span class="stat-label">Willpower:</span><span class="stat-will" id="s-will">10</span></div>
-    <div class="stat"><span class="stat-label">Hope:</span><span class="stat-hope" id="s-hope">8</span></div>
-    <div class="stat"><span class="stat-label">Ring Uses:</span><span class="stat-ring" id="s-ring">0</span></div>
-  </div>
-  <div id="chapter-label">Chapter I</div>
-  <div id="story-box"></div>
-  <div id="choices"></div>
-  <button id="play-again" onclick="startGame()">▶ Play Again</button>
-</div>
-
-<script>
-const state = { hp: 100, will: 10, hope: 8, ringUses: 0, chapter: 1, flags: {} };
-
-function updateStats() {
-  document.getElementById('s-hp').textContent = Math.max(0, state.hp);
-  document.getElementById('s-will').textContent = state.will;
-  document.getElementById('s-hope').textContent = state.hope;
-  document.getElementById('s-ring').textContent = state.ringUses;
-  document.getElementById('chapter-label').textContent = 'Chapter ' + toRoman(state.chapter);
-}
-
-function toRoman(n) {
-  return ['I','II','III','IV','V','VI','VII','VIII','IX','X'][n-1] || n;
-}
-
-let typewriterTimeout = null;
-function typeText(text, callback) {
-  const box = document.getElementById('story-box');
-  box.innerHTML = '';
-  box.className = '';
-  if (typewriterTimeout) clearTimeout(typewriterTimeout);
-  let i = 0;
-  const stripped = text.replace(/<[^>]+>/g, '');
-  const tags = [];
-  // Simple typewriter — render HTML instantly, animate only plain text length
-  let raw = text;
-  function step() {
-    if (i < raw.length) {
-      // Find next chunk (tag or char)
-      if (raw[i] === '<') {
-        let end = raw.indexOf('>', i);
-        box.innerHTML = raw.substring(0, end + 1);
-        i = end + 1;
-        typewriterTimeout = setTimeout(step, 0);
-      } else {
-        i++;
-        box.innerHTML = raw.substring(0, i);
-        typewriterTimeout = setTimeout(step, 18);
-      }
-    } else {
-      if (callback) callback();
-    }
-  }
-  step();
-}
-
-function showChoices(choices) {
-  const div = document.getElementById('choices');
-  div.innerHTML = '';
-  choices.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.textContent = c.label;
-    btn.onclick = () => {
-      div.querySelectorAll('button').forEach(b => b.disabled = true);
-      if (c.effect) c.effect();
-      setTimeout(() => goTo(c.next), 300);
-    };
-    div.appendChild(btn);
-  });
-}
-
-function goTo(sceneId) {
-  state.chapter = scenes[sceneId].chapter || state.chapter;
-  updateStats();
-  const scene = scenes[sceneId];
-  document.getElementById('play-again').style.display = 'none';
-  document.getElementById('choices').innerHTML = '';
-  typeText(scene.text, () => {
-    if (scene.choices && scene.choices.length) {
-      showChoices(scene.choices);
-    } else {
-      // ending
-      document.getElementById('play-again').style.display = 'block';
-    }
-  });
-}
-
-const scenes = {
-  start: {
-    chapter: 1,
-    text: `The fires of Osgiliath have long since cooled, but the darkness pressing east from Mordor grows thicker with each passing hour. You are <span class="em">Aldric of Bree</span> — no king, no wizard — just a member of a hastily assembled Fellowship tasked with one impossible errand.
-
-Gandalf places the Ring in your trembling hand. It is warm. It whispers.
-
-<span class="em">"One of us must carry it,"</span> he says, grey eyes grave. <span class="em">"And it cannot be me."</span>
-
-Aragorn's rangers have scouted two paths forward: the dark tunnels of Moria, or the long, exposed road through Rohan. Both are deadly. Neither forgives hesitation.
-
-Outside, a Nazgûl's shriek tears the night sky apart.`,
-    choices: [
-      { label: '⛏  Take the path through Moria — swift but haunted', next: 'moria_entry' },
-      { label: '🐎  Ride through Rohan — long but open skies', next: 'rohan_entry' },
-    ]
-  },
-
-  moria_entry: {
-    chapter: 2,
-    text: `The Doors of Durin are sealed by a riddle older than grief. By torchlight, you trace Elvish script above the arch: <span class="em">"Speak, friend, and enter."</span>
-
-Gandalf laughs softly — the answer is simply the Elvish word for friend. The doors swing inward with a groan like a dying giant. Beyond: absolute dark, absolute silence, and something vast stirring in the deep.
-
-Three days into the mountain, the Fellowship finds the tomb of Balin. Gimli weeps quietly. The dwarven ledger's last entry reads: <span class="em">"We cannot get out. The drums. The drums in the deep."</span>
-
-Then you hear them. Boom. Boom. Boom.
-
-Orcs flood the hall. The Balrog's fire-whip cracks at the far end of the bridge.
-
-HP -20 | Hope -1`,
-    choices: [
-      { label: '🔥  Stand and fight — buy the Fellowship time at the bridge', next: 'moria_fight', effect: () => { state.hp -= 20; state.hope -= 1; } },
-      { label: '💍  Put on the Ring — slip past unseen', next: 'moria_ring', effect: () => { state.hp -= 20; state.hope -= 1; } },
-    ]
-  },
-
-  moria_fight: {
-    chapter: 2,
-    text: `You draw your blade — a short sword of Westernesse, rune-etched, humming faintly as if glad for purpose.
-
-You hold the narrow bridge beside Aragorn while the others flee. The Balrog's presence scorches the air from your lungs. Still you stand. Willpower surging, you drive an orc from the ledge with a fierce cry. The monster takes seven of its kin into the darkness below.
-
-Gandalf raises his staff: <span class="em">"You shall not pass!"</span>
-
-The bridge breaks. The Balrog falls. Gandalf falls with it.
-
-The Fellowship stumbles out beneath the stars of Lothlórien, broken-hearted but alive. Galadriel meets you at the forest's edge, her eyes already knowing.
-
-<span class="em">"You carry something heavier than grief,"</span> she tells you. <span class="em">"Come. Rest. There are choices yet to make."</span>
-
-Willpower +2 | HP -10`,
-    choices: [
-      { label: '🌟  Accept Galadriel\'s gift and counsel — seek her wisdom', next: 'galadriel', effect: () => { state.will += 2; state.hp -= 10; state.flags.moria = true; } },
-    ]
-  },
-
-  moria_ring: {
-    chapter: 2,
-    text: `The Ring slides onto your finger.
-
-The world dissolves into grey smoke and silver flame. Orcs flicker past like shadows. The Balrog's roar becomes distant thunder. You move through the bridge unseen — a ghost among ghosts — while your companions fight and bleed.
-
-But the Ring tightens. It knows you. It <span class="em">sees</span> you seeing it.
-
-You tear it free on the far side, gasping. Two Nazgûl, though miles away, turn their heads toward Moria like hunting hounds. They felt it. They always feel it.
-
-Gandalf sacrifices himself at the bridge without your aid. The Fellowship grieves doubly — for him, and for what they glimpsed in your eyes.
-
-Ring Uses +1 | Willpower -2 | Hope -2`,
-    choices: [
-      { label: '🌟  Continue to Lothlórien in silence — seek Galadriel\'s counsel', next: 'galadriel', effect: () => { state.ringUses += 1; state.will -= 2; state.hope -= 2; state.flags.usedRingMoria = true; } },
-    ]
-  },
-
-  rohan_entry: {
-    chapter: 2,
-    text: `The plains of Rohan stretch endlessly west: golden grass bent by a cold wind that smells of rain and horse and old war. The Fellowship rides hard, hoping speed will outpace the Nazgûl's reach.
-
-On the third night, a rider appears — alone, with a spear levelled and a shield blazing the white horse of the Mark.
-
-<span class="em">"You trespass in the King's lands,"</span> she says, and you realise with a start that this is no man. Her eyes are fierce and clear. Éowyn of Rohan, in disguise, on a scouting errand of her own.
-
-She lowers her spear when she sees the grief on your faces. <span class="em">"Gandalf,"</span> she breathes. You nod. He was taken at the Fords of Isen, and the loss sits on the Fellowship like a stone.
-
-<span class="em">"Théoden King will not march — not while Wormtongue poisons his ear,"</span> she says. <span class="em">"But I might know a way."</span>
-
-Hope +1`,
-    choices: [
-      { label: '🛡  Ask Éowyn to lead you to Théoden — seek the King\'s alliance', next: 'rohan_king', effect: () => { state.hope += 1; state.flags.rohanPath = true; } },
-      { label: '🌲  Bypass Edoras — ride for Fangorn, seek the Ents instead', next: 'fangorn', effect: () => { state.hope += 1; state.flags.rohanPath = true; } },
-    ]
-  },
-
-  rohan_king: {
-    chapter: 3,
-    text: `The Golden Hall of Meduseld reeks of stale smoke and poisoned counsel. Gríma Wormtongue slithers at Théoden's feet, dripping honeyed lies into the old king's ear.
-
-Gandalf — delivered here by Gwaihir the Eagle in your version of events — throws off his grey robes. White robes blaze beneath. He speaks the true name of Gríma's master, and it strikes the court like lightning.
-
-Théoden rises. His eyes clear. He reaches for his sword with a hand that had forgotten what swords feel like.
-
-<span class="em">"Darkness has come to Rohan,"</span> he says, voice steadying. <span class="em">"But not yet its end."</span>
-
-You step forward and lay the Ring's burden before him — not giving it, never that — but showing him what you carry and what it costs.
-
-He clasps your shoulder. <span class="em">"Ride with us to Helm's Deep, Ring-bearer. After, we will see what aid Rohan can offer."</span>
-
-Hope +2 | HP +10`,
-    choices: [
-      { label: '⚔  Ride to Helm's Deep — fight alongside Rohan', next: 'helms_deep', effect: () => { state.hope += 2; state.hp += 10; } },
-    ]
-  },
-
-  fangorn: {
-    chapter: 3,
-    text: `Fangorn Forest breathes. The trees are not merely trees — their bark wrinkles into faces, their roots curl like sleeping fingers.
-
-Treebeard, the oldest living thing, lifts you in one great wooden hand and regards you with eyes the colour of deep forest pools.
-
-<span class="em">"A Ring-bearer,"</span> he says, very slowly. <span class="em">"I have not seen one of those since the Second Age."</span> He says it the way one might say: since Tuesday.
-
-You spend three days in council with the Ents. When the vote is called — whether to march on Isengard — you speak of the Ring's weight, of what happens to the land if Sauron wins. Treebeard is moved. The Entmoot ends with a single slow word:
-
-<span class="em">"Burarum. We march."</span>
-
-Isengard falls in a torrent of roots and river-water. Saruman's voice, broken from his tower, sends a curse after you that lands like a cold hand on your heart.
-
-Willpower -1 | Hope +3`,
-    choices: [
-      { label: '🗺  Press east — the Ents have bought time; head for Mordor\'s border', next: 'crossroads', effect: () => { state.will -= 1; state.hope += 3; state.flags.entAlliance = true; } },
-    ]
-  },
-
-  galadriel: {
-    chapter: 3,
-    text: `Lothlórien wraps itself around you like a fever-dream: silver mallorn trees, soft Elvish song drifting down from unseen heights, and grief hanging in the air like incense.
-
-Galadriel leads you alone to her mirror — a silver basin filled with starwater.
-
-<span class="em">"I will not command you to look,"</span> she says. <span class="em">"But if you wish to know what is at stake—"</span>
-
-You look. You see Frodo failing on the stairs of Cirith Ungol. You see the Shire burning. You see a great lidded eye, searching, searching.
-
-Then she holds out her hand. <span class="em">"Give it to me."</span>
-
-The Ring in your pocket grows hot. She is testing herself. Her eyes flicker gold.
-
-Then she withdraws her hand, trembling. <span class="em">"I pass the test. I will diminish — and remain Galadriel."</span>
-
-She gives you the Phial of Galadriel: a light against the dark. Hope blooms where it touches.
-
-Willpower +1 | Hope +2`,
-    choices: [
-      { label: '🗺  Leave Lothlórien and press on toward Mordor\'s border', next: 'crossroads', effect: () => { state.will += 1; state.hope += 2; state.flags.phial = true; } },
-    ]
-  },
-
-  helms_deep: {
-    chapter: 3,
-    text: `The Hornburg stands against ten thousand Uruk-hai. Rain hammers the walls. Torches gutter. Beside you, shield-maidens and grey-bearded farmers grip weapons with white-knuckled hands.
-
-You fight through the night — sword work, torch work, desperate work. The Ring pulses with every death nearby, offering power, offering relief. You refuse it again and again.
-
-Dawn comes in a blaze of Gandalf-white as the Rohirrim ride over the ridge. The Uruk-hai flee and are swallowed by the forest the Ents drove south.
-
-In the quiet aftermath, Aragorn finds you sitting on a stone, the Ring clenched in your fist, sweat-cold despite the sun.
-
-<span class="em">"Still yourself,"</span> he says quietly. <span class="em">"It wants you to be desperate. Don't be."</span>
-
-Hope +2 | Willpower +1`,
-    choices: [
-      { label: '🗺  Ride east with what allies remain — press for Mordor', next: 'crossroads', effect: () => { state.hope += 2; state.will += 1; } },
-    ]
-  },
-
-  crossroads: {
-    chapter: 4,
-    text: `The Crossroads of the Fallen King. A stone figure of an ancient ruler of Gondor, crowned now with a crude helmet by Sauron's orcs. But wildflowers have pushed through the rubble at its feet, small and gold and entirely indifferent to darkness.
-
-The path to Mount Doom lies ahead. Sam — Sam who has carried your pack and your hope for a hundred miles — puts a hand on your arm.
-
-<span class="em">"I know it's heavy,"</span> he says. <span class="em">"I know you're tired. But it's just one foot in front of the other, Mr. Aldric. That's all it ever is."</span>
-
-But then scouts return with news: the Dead Men of Dunharrow haunt these passes. Aragorn commands them by right of the King's blade. They could clear a path to the Black Gate itself — or you could slip through Cirith Ungol, spider-haunted but less guarded.
-
-Your companions look to you. The Ring is hot against your skin. You can feel Sauron's eye sweeping closer. Closer.`,
-    choices: [
-      { label: '💀  March to the Black Gate with the Army of the Dead', next: 'dead_men', effect: () => {} },
-      { label: '🕷  Take the secret stair of Cirith Ungol — speed over safety', next: 'cirith_ungol', effect: () => {} },
-      ...(state.ringUses > 0 ? [{ label: '💍  Use the Ring to command safe passage — bend Middle-earth to your will', next: 'ring_corruption_end', effect: () => { state.ringUses += 1; } }] : []),
-    ]
-  },
-
-  dead_men: {
-    chapter: 5,
-    text: `The Paths of the Dead are cold beyond cold — a chill that has nothing to do with temperature. Ghostly warriors drift like smoke through stone corridors, their faces hollow with an ancient oath's weight.
-
-Aragorn raises Andúril. <span class="em">"You were summoned. The hour has come. Keep your oath and be released."</span>
-
-The King of the Dead bows his grey head. The army moves.
-
-At the Black Gate, the Dead Men crash through Sauron's forces like a tide through smoke. Mordor's armies scatter. The Eye swings wildly, searching. And in that moment of desperate, searching fury — you see it. The cracks of Doom visible through the smoke, and a path to them, unguarded.
-
-But Sauron has felt the Ring. He knows. He is pulling it toward him even now. You feel your hand rising of its own accord.`,
-    choices: [
-      { label: '🔥  Run. Sprint for the Cracks of Doom — throw the Ring in', next: 'ending_destroy' },
-      { label: '🤝  Parley — offer Sauron a truce; the Ring for Middle-earth\'s peace', next: 'ending_peace', effect: () => {} },
-      { label: '💍  Put it on — seize the power and end this yourself', next: 'ending_consumed', effect: () => { state.ringUses += 1; } },
-    ]
-  },
-
-  cirith_ungol: {
-    chapter: 5,
-    text: `Shelob is older than Sauron's wars. She does not serve him — she serves only hunger. Her tunnel is absolute dark, absolute silk, absolute dread.
-
-The Phial of Galadriel blazes in your hand${state.flags.phial ? ' — Galadriel\'s gift, given for exactly this darkness' : ' — light pressed between trembling fingers'}. The great spider recoils with a shriek that sounds almost like language.
-
-You drive her back. You crawl through the tunnel and emerge at the Tower of Cirith Ungol, where orc and orc quarrel over stolen goods. In their distraction you slip through. The plains of Gorgoroth open before you: grey, ashen, volcanic.
-
-Forty miles to Mount Doom. The Ring is now so heavy you carry it in both hands. Sam takes your pack. Your companions form a ring around you, blades out.
-
-<span class="em">"One foot at a time,"</span> Sam whispers. <span class="em">"Just one foot."</span>
-
-HP -15${state.hp <= 15 ? ' — You barely survive' : ''}`,
-    choices: [
-      { label: '🔥  Press forward to Mount Doom — carry it to the end', next: 'ending_destroy', effect: () => { state.hp -= 15; } },
-      { label: '💍  Use the Ring — you\'re too weak to make it otherwise', next: 'ending_consumed', effect: () => { state.ringUses += 1; state.hp -= 15; } },
-    ]
-  },
-
-  // ENDINGS
-  ending_destroy: {
-    chapter: 6,
-    text: `<span class="ending-text">Mount Doom roars beneath you. The mountain knows what you carry. The air blisters. The stone runs liquid at the path's edge.</span>
-
-The Ring speaks now — not in whispers but in full voice, in voices you love. Your mother. Gandalf. Every face that ever trusted you.
-
-<span class="em">"You have come so far. You deserve to rest. To rule. To be more than a messenger."</span>
-
-Your hand trembles at the lip of the Crack. Below: liquid fire, the mountain's heart, the only place in all of existence where this thing was made and the only place it can be unmade.
-
-You open your hand.
-
-The Ring falls.
-
-There is a sound like the world drawing breath. Then Sauron's tower, visible even at this distance, leans — tilts — and comes apart in slow terrible silence. His armies collapse. The Nazgûl unravel in the sky like smoke in wind. The Eye, great as a furnace, dims and goes out.
-
-<span class="ending-text">You did not become a hero. You became something quieter and rarer: a person who, when given ultimate power, simply let it go.
-
-The eagles come. You are carried west on wings that smell of lightning.
-
-Middle-earth breathes again.</span>
-
-★ ENDING: THE RING IS DESTROYED ★
-Final Willpower: ${state.will} | Final Hope: ${state.hope}`,
-    choices: []
-  },
-
-  ending_consumed: {
-    chapter: 6,
-    text: `<span class="ring-warning">The Ring slides onto your finger for the last time.</span>
-
-Power such as you have never imagined — have never deserved — floods through every vein. You see everything. Every orc encampment, every hidden pass, every secret in every heart in Middle-earth. You are vast. You are terrible.
-
-And Sauron sees you.
-
-<span class="ring-warning">He has been waiting. This is what the Ring was always for — not to give power to its bearer, but to return to its maker. It was never yours. It was always his.</span>
-
-Your companions call your name. It sounds very far away.
-
-The Eye descends.
-
-When they find what remains of you — three days later, in the rubble of a ruined watchtower — there is no Ring. There is only a hollow shell wearing your face, repeating one word in a broken whisper:
-
-<span class="ring-warning">Mine. Mine. Mine.</span>
-
-Middle-earth endures — but only barely, and only because Aragorn rallied what remained. The Quest failed. But the world, chastened and grieving, survives.
-
-★ ENDING: CONSUMED BY THE RING ★
-Ring Uses: ${state.ringUses} | Hope Lost: ${10 - state.hope}`,
-    choices: []
-  },
-
-  ending_peace: {
-    chapter: 6,
-    text: `<span class="ending-text">You walk forward alone. No sword. No companion. Just you and the Ring and the smoking eye of the Enemy filling the sky like a wound.</span>
-
-The parley is wordless — you hold the Ring up, and the eye focuses. The whole world holds its breath.
-
-<span class="em">"I offer return of the One Ring,"</span> you say, and your voice does not shake, though your knees do. <span class="em">"In exchange for the withdrawal of all forces. Permanent. Witnessed by Manwë himself if you will it."</span>
-
-Silence. A silence so absolute you hear your own heart.
-
-Then — not agreement, but something stranger. A pause. A considering. Sauron, who has not been surprised since the First Age, is surprised.
-
-He withdraws his armies. Not in peace — he keeps the Ring — but in a stalemate that lasts three hundred years, long enough for Men to forget, and for something new to grow in the forgetting.
-
-<span class="ending-text">You did not destroy the darkness. You negotiated with it.
-
-Scholars argue for centuries whether this was wisdom or cowardice. Galadriel, when asked, only smiles and says: <span class="em">"It was unexpected. And the unexpected is the only thing that has ever moved the world."</span></span>
-
-★ ENDING: THE UNEXPECTED PEACE ★
-Willpower: ${state.will} | Hope: ${state.hope} | Ring Uses: ${state.ringUses}`,
-    choices: []
-  },
-
-  ring_corruption_end: {
-    chapter: 5,
-    text: `<span class="ring-warning">The Ring has been waiting for this moment. It knew. It always knows.</span>
-
-You command the passes open — and they open. Mountains move. Armies part. The world bends to you like a dog to its master, and you feel the intoxicating warmth of absolute authority.
-
-But with each mile of safe passage the Ring purchases for you, something leaves. Your companions' faces grow distant and strange. Their voices irritate you. Their weakness disgusts you. You begin to plan — not how to destroy the Ring, but how to use it better, more efficiently, more completely.
-
-By the time you reach Mordor's edge, you have not thrown it into the fire. You have built a throne on the bones of good intentions.
-
-<span class="ring-warning">Sauron does not defeat you. He simply waits, patient as stone, until you become him.
-
-It takes eleven years. It feels like a triumph the entire time.</span>
-
-★ ENDING: THE RING CORRUPTS — A NEW DARK LORD RISES ★
-Ring Uses: ${state.ringUses}`,
-    choices: []
-  },
-};
-
-function startGame() {
-  state.hp = 100; state.will = 10; state.hope = 8; state.ringUses = 0; state.chapter = 1;
-  state.flags = {};
-  document.getElementById('play-again').style.display = 'none';
-  updateStats();
-  goTo('start');
-}
-
-// Dynamically add ring-use option to crossroads if needed
-const origCrossroads = scenes.crossroads;
-const origChoices = [
-  { label: '💀  March to the Black Gate with the Army of the Dead', next: 'dead_men', effect: () => {} },
-  { label: '🕷  Take the secret stair of Cirith Ungol — speed over safety', next: 'cirith_ungol', effect: () => {} },
-];
-Object.defineProperty(scenes.crossroads, 'choices', {
-  get() {
-    const cs = [...origChoices];
-    if (state.ringUses > 0 || state.will < 6) {
-      cs.push({ label: '💍  Use the Ring to command safe passage — bend Middle-earth to your will', next: 'ring_corruption_end', effect: () => { state.ringUses += 1; } });
-    }
-    return cs;
-  }
-});
-
-startGame();
-</script>
+    <div class="container">
+        <div class="title">THE FELLOWSHIP QUEST</div>
+        <div class="subtitle">~ A Journey to Mount Doom ~</div>
+
+        <div class="stats-container">
+            <div class="stat">
+                <span class="stat-name">Health</span>
+                <div class="stat-bar"><div class="stat-fill" id="hpFill"></div></div>
+                <span class="stat-value"><span id="hpValue">100</span>/100</span>
+            </div>
+            <div class="stat">
+                <span class="stat-name">Hope</span>
+                <div class="stat-bar"><div class="stat-fill" id="hopeFill"></div></div>
+                <span class="stat-value"><span id="hopeValue">100</span>/100</span>
+            </div>
+            <div class="stat">
+                <span class="stat-name">Willpower</span>
+                <div class="stat-bar"><div class="stat-fill" id="willFill"></div></div>
+                <span class="stat-value"><span id="willValue">100</span>/100</span>
+            </div>
+            <div class="stat">
+                <span class="stat-name">Corruption</span>
+                <div class="stat-bar"><div class="stat-fill" id="corruptFill" style="background: #c8441c;"></div></div>
+                <span class="stat-value"><span id="corruptValue">0</span>/100</span>
+            </div>
+        </div>
+
+        <div class="story-text" id="story"></div>
+
+        <div class="choices-container" id="choices"></div>
+
+        <button class="play-again-btn" id="playAgain">Play Again</button>
+    </div>
+
+    <script>
+        const game = {
+            hp: 100,
+            hope: 100,
+            willpower: 100,
+            corruption: 0,
+            currentScene: 'start',
+            typeSpeed: 30,
+            isTyping: false,
+
+            scenes: {
+                start: {
+                    text: `You are standing at the Council of Elrond, the great gathering of Free Peoples. The weight of destiny settles upon your shoulders as Elrond speaks of the One Ring and the perilous journey ahead.\n\n"The Ring must be destroyed in the fires of Mount Doom," Elrond's voice echoes through the hall. "Who will join the Fellowship on this quest?"\n\nYou step forward. The Ring rests heavy in the Fellowship's keeping, and you have volunteered to be one of its carriers. Your companions look to you—Aragorn the ranger, Gandalf the wizard, and the hobbits. The road ahead is dark and treacherous.\n\nBut first, you must decide: how will you approach this burden?`,
+                    choices: [
+                        { text: '► Embrace the Ring\'s power—it will serve our purpose', next: 'ringPower', stat: 'corruption', change: 15 },
+                        { text: '► Keep the Ring secure—guard it with every ounce of will', next: 'willful', stat: 'willpower', change: 10 },
+                        { text: '► Trust in the Fellowship\'s strength to protect each other', next: 'fellowship', stat: 'hope', change: 10 }
+                    ]
+                },
+
+                ringPower: {
+                    text: `You grasp the Ring, feeling a surge of dark energy flow through your veins. Its power whispers promises—dominion, strength, immortality.\n\n"I will use whatever means necessary to complete this quest," you declare.\n\nGandalf's eyes narrow with concern, but you ignore his gaze. The Ring feels natural in your hand, almost as though it was meant for you all along. The corruption settles in your mind like a seed taking root.\n\nThe Fellowship departs Rivendell. Days turn to weeks. You press forward, driven by the Ring's intoxicating power. But your companions grow wary. Boromir watches you with suspicion. Even Aragorn keeps his distance.\n\nAt the Mines of Moria, everything changes.`,
+                    choices: [
+                        { text: '► Use the Ring\'s power against the Balrog directly', next: 'balrogFight', stat: 'corruption', change: 20 },
+                        { text: '► Resist the urge and help Gandalf with old magic', next: 'gandolfAid', stat: 'willpower', change: 15 }
+                    ]
+                },
+
+                balrogFight: {
+                    text: `"No!" you cry out as the Balrog's whip cracks across the chasm. You summon the Ring's power, calling upon it to strike the creature down.\n\nThe Ring amplifies your will into raw shadow and flame. For a moment, you are unstoppable. The Balrog recoils, and you feel invincible.\n\nBut the price is immense. The Ring's corruption floods through you like poison, searing your mind. You fall to your knees, gasping. Your companions stare at you in horror as your form flickers between states—for a moment, they can almost see another world through you.\n\nGandalf lies fallen. The Ring's hold over you is nearly absolute now. You have survived, but at what cost?`,
+                    choices: [
+                        { text: '► Continue to Mount Doom alone—you\'ve become the Ring itself', next: 'darkEnding', stat: 'corruption', change: 30 },
+                        { text: '► Fight the corruption and rally the Fellowship to finish Gandalf\'s work', next: 'sacrifice', stat: 'hope', change: -20 }
+                    ]
+                },
+
+                gandolfAid: {
+                    text: `You clench your fist and thrust the Ring away. "We are stronger together!" you shout.\n\nYou join Gandalf in weaving ancient magic, combining your willpower with his wizardry. The Balrog shrieks as the combined spell strikes it. For a moment, you feel the Ring's power and your own will align perfectly—not as master and slave, but as partners in purpose.\n\nGandalf falls into the abyss, but his sacrifice buys you time. The Fellowship escapes the Mines.\n\nWith each step toward Mount Doom, you feel the Ring's pull lessening. Your will holds strong. Your companions trust you again. But the journey grows darker as you approach Mordor itself.`,
+                    choices: [
+                        { text: '► Lead them through the treacherous Paths of the Dead', next: 'deadMarch', stat: 'hope', change: 5 },
+                        { text: '► Take a hidden pass only you sense through the Ring\'s knowledge', next: 'ringPath', stat: 'corruption', change: 10 }
+                    ]
+                },
+
+                fellowship: {
+                    text: `"We will face this together," you say, looking into the eyes of each Fellowship member. "No burden is too great if we share it."\n\nA warmth spreads through your chest. Hope ignites in the hearts of all around you. Even Boromir nods with grim determination.\n\nThe Fellowship travels with newfound unity. At Lothlórien, Galadriel blesses your quest personally. The hobbits gain unexpected courage. Aragorn stands taller, knowing he is not alone in this struggle.\n\nWhen you reach Amon Hen, Boromir's temptation to take the Ring is met with your steady hand and words of compassion. You do not judge him—you understand. Together, you prevent tragedy.\n\nBut now, at the borders of Mordor, the final trial awaits.`,
+                    choices: [
+                        { text: '► Climb Mount Doom with your closest companion by your side', next: 'companionEnd', stat: 'hope', change: 5 },
+                        { text: '► Send your companion to safety and climb alone—protect them from the darkness', next: 'soloBrave', stat: 'hope', change: -10 }
+                    ]
+                },
+
+                deadMarch: {
+                    text: `The Paths of the Dead shimmer before you, ancient and terrible. The spirits of fallen kings whisper your name. Your willpower wavers as ghostly hands reach toward you.\n\n"Stay strong," you command the Fellowship. And somehow, they do. Your courage steels them against the supernatural dread.\n\nYou emerge at the gates of Minas Tirith, where the final battle rages. The Shadow seems overwhelming, but your Fellowship stands unwavering. Together, you press toward Mount Doom.\n\nAs you climb the mountain, the Ring's corruption has not claimed you—your will and the Fellowship's bond have proven stronger. At the Cracks of Doom, you are clear-minded and resolute.`,
+                    choices: [
+                        { text: '► Destroy the Ring once and for all with perfect clarity', next: 'trueEnding', stat: 'hope', change: 10 },
+                        { text: '► Hesitate for just a moment—the Ring whispers one last temptation', next: 'failEnding', stat: 'corruption', change: 15 }
+                    ]
+                },
+
+                ringPath: {
+                    text: `The Ring's knowledge flows into your mind. You see a hidden way—a path no Orc would ever guard because even they do not know it exists.\n\n"Follow me," you tell the Fellowship. "I know the way."\n\nBut with each step, you feel the corruption deepening. The Ring is showing you its secrets, and the price is your soul. Your companions begin to notice your speech changing, your eyes growing distant. They follow, but fear grips their hearts.\n\nYou reach Mount Doom faster than any path should allow. The Ring has brought you here, and now it does not wish to leave your hand. Your grip tightens involuntarily.`,
+                    choices: [
+                        { text: '► One final burst of willpower—throw yourself and the Ring into the fire', next: 'selflessEnding', stat: 'willpower', change: -30 },
+                        { text: '► The Ring is yours now—claim it and reshape this world', next: 'darkEnding', stat: 'corruption', change: 20 }
+                    ]
+                },
+
+                sacrifice: {
+                    text: `The corruption burns through your mind like wildfire, but you clench your teeth and resist. Inch by agonizing inch, you reclaim yourself. The Ring's voice fades to a whisper, then silence.\n\nYour companions help you to your feet. Though Gandalf is gone, the Fellowship is renewed with purpose. You will finish what he started.\n\nThe journey to Mount Doom tests every remaining ounce of your strength. Your health fails, your hope flickers, but your willpower becomes an unbreakable fortress. Each step is agony, but you will not surrender.\n\nAt last, you reach the Cracks of Doom. The Ring lies heavy in your hand—not as a master, but as a burden you have chosen to bear.`,
+                    choices: [
+                        { text: '► Cast the Ring into the fire with your last breath', next: 'trueEnding', stat: 'willpower', change: -20 },
+                        { text: '► Fall, and let the Ring tumble from your dying fingers', next: 'hopefulEnding', stat: 'hope', change: 5 }
+                    ]
+                },
+
+                companionEnd: {
+                    text: `Together, you and your most trusted companion climb toward the summit. The Ring's whispers echo in the darkness, but your companion's steady presence keeps you grounded in reality.\n\n"We've come so far," they say. "We can finish this together."\n\nAs you reach the Cracks of Doom, your companion takes your hand. The Ring tries one final time to possess you, but the warmth of that human connection—that bond of fellowship—proves stronger than all its dark promises.\n\nWith your companion's hand in yours, you cast the Ring into the flames. It shrieks as it burns, and Middle-earth trembles as its power dissolves into ash.`,
+                    choices: [
+                        { text: '► The Return Home', next: 'companionWin', stat: null, change: 0 }
+                    ]
+                },
+
+                soloBrave: {
+                    text: `"You must go," you tell your companion. "I will not risk you to the darkness that awaits at the mountain's peak."\n\nThey protest, but you are resolute. Alone, you climb the volcano, every step a trial. The Ring's voice grows louder without the companionship to shield you. Corruption seeps into your very bones.\n\nBut you remember why you came. You remember the Fellowship. You remember their faces, their courage, their hope. It is enough.\n\nAt the Cracks of Doom, with blood on your hands and your mind screaming, you make the ultimate choice.`,
+                    choices: [
+                        { text: '► Complete the Destruction', next: 'trueEnding', stat: 'corruption', change: -20 }
+                    ]
+                },
+
+                trueEnding: {
+                    text: `With a final cry of triumph and agony, you cast the Ring into the fire. It burns—really burns—and the world convulses. The Shadow that has covered Middle-earth begins to dissipate.\n\nYour vision darkens as the Ring's demise pulls at your very life force. But as you fall, you see them—the Fellowship, standing safe beyond the mountain's reach. You see Aragorn crowned as King. You see the Shire restored to peace. You see a new age dawning.\n\nYou smile, and the darkness takes you.\n\n✦ THE TRUE ENDING ✦\nYou have destroyed the Ring and saved Middle-earth. Your sacrifice will be remembered in song and story for ages to come. The Quest is complete.`,
+                    choices: []
+                },
+
+                darkEnding: {
+                    text: `The Ring is yours. Its power flows through your veins, and you laugh—a sound that echoes across the mountains like thunder.\n\nBut as you stand atop Mount Doom, Master of the Ring, you realize the terrible truth: you are not free. You are enslaved to its power. Your mind fractures under the weight of its corruption.\n\nThe Fellowship watches in horror as you transform. You are no longer yourself. The Ring has consumed you completely.\n\nThe world does not end with the Ring's destruction. It ends with its triumph.\n\n✦ THE DARK ENDING ✦\nMiddle-earth falls under eternal shadow. You have become the very evil you sought to destroy.`,
+                    choices: []
+                },
+
+                failEnding: {
+                    text: `Just for a moment—just one fraction of a second—you hesitate. The Ring is so beautiful, so full of possibility. Just one moment of weakness.\n\nIt is all Sauron needs.\n\nThe Ring slips from your hand and shatters against the stone. It does not burn. Instead, it reforms, darker and stronger than before. From the depths of Mordor, a terrible laugh echoes upward.\n\nThe Ring returns to its Master, and all hope is extinguished.\n\n✦ THE FAILED ENDING ✦\nYour momentary weakness cost the world everything. The Ring's power grows unchecked, and darkness reigns eternal over Middle-earth.`,
+                    choices: []
+                },
+
+                hopefulEnding: {
+                    text: `Your strength fails. The Ring tumbles from your fingers as you collapse to the ground. For a moment, it seems all is lost.\n\nBut in that final moment, something unexpected happens. Gollum—poor, twisted Gollum—driven by his obsession with his "precious," scrambles into the chamber. In the chaos, he seizes the Ring and dances too close to the fire.\n\nTogether, Gollum and the Ring fall into the flames.\n\nAs consciousness fades, you hear the world singing. The Shadow breaks. The Ring is destroyed.\n\n✦ THE HOPEFUL ENDING ✦\nYou did not complete the Quest alone, but together with all of Middle-earth—even its most broken soul—the Ring has been unmade. You drift into peaceful darkness, knowing you succeeded.`,
+                    choices: []
+                },
+
+                companionWin: {
+                    text: `In the moment of the Ring's destruction, you feel its power die. The corruption that threatened to consume your soul simply... ceases. You are free.\n\nYour companion embraces you as the mountain shakes. You stumble down the slopes together, battered but alive, while the Shadow that has haunted Middle-earth dissolves like morning mist.\n\nMonths later, you stand in the Shire at Bilbo's farewell party, knowing that the greatest adventure of all was not the journey to Mount Doom—it was the fellowship that got you there.\n\n✦ THE FELLOWSHIP ENDING ✦\nTogether, you have saved Middle-earth. Together, you have survived. This is the truest victory of all—not conquest, but companionship. The Quest is complete, and home has never been sweeter.`,
+                    choices: []
+                },
+
+                selflessEnding: {
+                    text: `The Ring wraps around your mind like chains, demanding to be kept, to be treasured, to be loved. But you are stronger than it knows.\n\nWith the last fragment of your will, you drive yourself and the Ring toward the nearest crack in the mountainside. The Ring shrieks in outrage, but it is too late.\n\nYou plunge into the fire. The Ring burns. And you, finally, are at peace.\n\n✦ THE SELFLESS ENDING ✦\nYour sacrifice is absolute, but it is also final. The Ring is destroyed. Middle-earth is saved. Your name will live forever in the hearts of those you loved and those you saved.`,
+                    choices: []
+                }
+            },
+
+            updateStats() {
+                this.hp = Math.max(0, Math.min(100, this.hp));
+                this.hope = Math.max(0, Math.min(100, this.hope));
+                this.willpower = Math.max(0, Math.min(100, this.willpower));
+                this.corruption = Math.max(0, Math.min(100, this.corruption));
+
+                document.getElementById('hpValue').textContent = this.hp;
+                document.getElementById('hopeValue').textContent = this.hope;
+                document.getElementById('willValue').textContent = this.willpower;
+                document.getElementById('corruptValue').textContent = this.corruption;
+
+                document.getElementById('hpFill').style.width = this.hp + '%';
+                document.getElementById('hopeFill').style.width = this.hope + '%';
+                document.getElementById('willFill').style.width = this.willpower + '%';
+                document.getElementById('corruptFill').style.width = this.corruption + '%';
+            },
+
+            typeText(text, callback) {
+                this.isTyping = true;
+                const storyDiv = document.getElementById('story');
+                storyDiv.textContent = '';
+                let index = 0;
+
+                const type = () => {
+                    if (index < text.length) {
+                        storyDiv.textContent += text[index];
+                        index++;
+                        setTimeout(type, this.typeSpeed);
+                    } else {
+                        this.isTyping = false;
+                        if (callback) callback();
+                    }
+                };
+
+                type();
+            },
+
+            showChoices() {
+                const choicesDiv = document.getElementById('choices');
+                choicesDiv.innerHTML = '';
+                const scene = this.scenes[this.currentScene];
+
+                if (scene.choices.length === 0) {
+                    setTimeout(() => {
+                        document.getElementById('playAgain').classList.add('visible');
+                    }, 1000);
+                    return;
+                }
+
+                scene.choices.forEach((choice, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'choice-btn';
+                    button.textContent = choice.text;
+                    button.onclick = () => this.makeChoice(choice);
+
+                    choicesDiv.appendChild(button);
+
+                    setTimeout(() => {
+                        button.classList.add('visible');
+                    }, 200 + index * 150);
+                });
+            },
+
+            makeChoice(choice) {
+                if (choice.stat && choice.change) {
+                    this[choice.stat] += choice.change;
+                    this.updateStats();
+                }
+
+                this.currentScene = choice.next;
+                this.play();
+            },
+
+            play() {
+                const scene = this.scenes[this.currentScene];
+                this.typeText(scene.text, () => this.showChoices());
+            },
+
+            reset() {
+                this.hp = 100;
+                this.hope = 100;
+                this.willpower = 100;
+                this.corruption = 0;
+                this.currentScene = 'start';
+                this.updateStats();
+                document.getElementById('playAgain').classList.remove('visible');
+                document.getElementById('choices').innerHTML = '';
+                this.play();
+            }
+        };
+
+        // Initialize the game
+        game.updateStats();
+        game.play();
+
+        document.getElementById('playAgain').addEventListener('click', () => game.reset());
+    </script>
 </body>
 </html>
